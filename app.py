@@ -64,6 +64,18 @@ def transferir_receta():
     finally:
         factor = leer_factor_balanza(host,connector,client)
         valores = seleccion_valores_formula(cursor, factor, agua)
+        
+        datos = {
+            'nombre' : request.form['nombre'],
+            'numero' :request.form['noOrdenProd'],
+            'batch': request.form['batch'],
+            'pt01': request.form['pt01'],
+            'pt02': request.form['pt02'],
+            'pt03': request.form['pt03']
+        }
+        
+        cambiar_string_plc(cursor,host,connector,client,datos)
+    
         response = actualizar_plc(host,valores,connector,client)
         return dumps(response)
     

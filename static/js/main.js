@@ -677,6 +677,13 @@ function cambiarGrasa() {
 function transferirReceta() {
     $('#resumen_modal').modal('hide');
     var agua = $('#Agua').val();
+    var nombre = $('#seleccion').val();
+    var noOrdenProd = $('#OrdenProd').val();
+    var batches = $('#batches').val();
+    var pt01 = $('#pt01').val();
+    var pt02 = $('#pt02').val();
+    var pt03 = $('#pt03').val();
+
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
@@ -702,7 +709,13 @@ function transferirReceta() {
         url: '/transferir_receta',
         type: 'POST',
         data: {
-            'data': agua
+            'data': agua,
+            'noOrdenProd': noOrdenProd,
+            'nombre': nombre,
+            'batch': batches,
+            'pt01': pt01,
+            'pt02': pt02,
+            'pt03': pt03,
         },
         beforeSend: function () {
             console.log('Enviada');

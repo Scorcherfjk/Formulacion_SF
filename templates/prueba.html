@@ -491,59 +491,6 @@ INICIO | SF
     </div>
 </div>
 
-<!-- Resultado de receta -->
-<div class="modal fade" id="resumen_modal" tabindex="-1" role="dialog" aria-labelledby="resumen_contenido_modal"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-secondary text-light">
-                <h5 class="modal-title" id="resumen_contenido_modal">Confirmar descarga de los siguientes datos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-light">
-                    <tbody>
-                        <tr>
-                            <td>Formula</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>No. Orden de producción</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>No de Batches a producir</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Factor mezcladora</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Agua</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Grasa PostPellet</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Tolvas PT Destino</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="transferirReceta()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Error por maximo sobrepasado -->
 <div class="modal fade" id="errorm_modal" tabindex="-1" role="dialog" aria-labelledby="errorm_contenido_modal"
     aria-hidden="true">
@@ -564,5 +511,59 @@ INICIO | SF
         </div>
     </div>
 </div>
+
+<!-- Resultado de receta -->
+<div class="modal fade" id="resumen_modal" tabindex="-1" role="dialog" aria-labelledby="resumen_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="resumen_contenido_modal">Confirmar descarga de los siguientes datos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-light">
+                    <tbody>
+                        <tr>
+                            <th>Formula</th>
+                            <td id="tbl_formula"></td>
+                        </tr>
+                        <tr>
+                            <th>No. Orden de producción</th>
+                            <td id="tbl_noOrdenProd"></td>
+                        </tr>
+                        <tr>
+                            <th>No de Batches a producir</th>
+                            <td id="tbl_noBatch"></td>
+                        </tr>
+                        <tr>
+                            <th>Factor mezcladora</th>
+                            <td id="tbl_factor"></td>
+                        </tr>
+                        <tr>
+                            <th>Agua</th>
+                            <td id="tbl_agua"></td>
+                        </tr>
+                        <tr>
+                            <th>Grasa PostPellet</th>
+                            <td id="tbl_grasa"></td>
+                        </tr>
+                        <tr>
+                            <th>Tolvas PT Destino</th>
+                            <td id="tbl_tolvaspt"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="transferirReceta()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}

@@ -1,4 +1,10 @@
 
+#############################################################################################################################
+
+def listaASCII(texto):
+    a = [ord(i) for i in texto]
+    return a
+
 #########################################################################################
 
 def seleccion_formula(cursor):
@@ -232,3 +238,74 @@ def consultar_registro_grasa(cursor):
     cursor.commit()
     
     return value
+
+#############################################################################################################################
+
+def cambioTexto(host,connector,client,tag,var_ascii):
+    
+    tags = []
+    
+    for index, value in enumerate(var_ascii):
+        tags.append("{}.DATA[{}]=(SINT){}".format(tag,index,value))
+
+    resultado = []
+    
+    tags.append("{}.LEN=(DINT){}".format(tag,len(tags)))
+
+    with connector( host=host ) as conn:
+        for index,descr,op,reply,status,value in conn.pipeline(operations=client.parse_operations( tags ), depth=2 ):
+            resultado.append(value)
+        
+    return resultado, tags
+
+#############################################################################################################################
+
+
+def actualizar_batch(host,connector,client, valor):
+    
+    tags = ["BATCH_SEQ.PRE=(REAL){}".format(valor)]
+        
+    resultado = []
+    with connector( host=host ) as conn:
+        for index,descr,op,reply,status,value in conn.pipeline(operations=client.parse_operations( tags ), depth=2 ):
+            resultado.append(value)
+        
+    return tags
+
+
+def cambiar_string_plc(cursor, host,connector,client,diccionario):
+    try:
+        cursor.execute("SELECT  [Tolva] FROM [dbo].[Tolva] WHERE [id_Tolva] = '{}'".format(diccionario['pt01']))
+        row = cursor.fetchone()
+        pt01 = row[0]
+        cursor.commit()
+    except:
+        pt01 = ''
+    
+    try:
+        cursor.execute("SELECT  [Tolva] FROM [dbo].[Tolva] WHERE [id_Tolva] = '{}'".format(diccionario['pt02']))
+        row = cursor.fetchone()
+        pt02 = row[0]
+        cursor.commit()
+    except:
+        pt02 = ''
+        
+    try:
+        cursor.execute("SELECT  [Tolva] FROM [dbo].[Tolva] WHERE [id_Tolva] = '{}'".format(diccionario['pt03']))
+        row = cursor.fetchone()
+        pt03 = row[0]
+        cursor.commit()
+    except:
+        pt03 = ''
+            
+    cursor.execute("SELECT [Receta].[Descripcion] FROM [db_chancay].[dbo].[Receta] WHERE [Receta].[Codigo] = {}".format(diccionario['nombre']))
+    row = cursor.fetchone()
+    nombre_real = row[0]
+    cursor.commit()
+    
+    actualizar_batch(host,connector,client,diccionario['batch'])
+    cambioTexto(host,connector,client,'Receta_Nombre',listaASCII(nombre_real))
+    cambioTexto(host,connector,client,'NoOrdenProd',listaASCII(diccionario['numero']))
+    cambioTexto(host,connector,client,'TOLVAPT01',listaASCII(pt01))
+    cambioTexto(host,connector,client,'TOLVAPT02',listaASCII(pt02))
+    cambioTexto(host,connector,client,'TOLVAPT03',listaASCII(pt03))
