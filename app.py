@@ -56,12 +56,17 @@ def validar_receta():
 ## TRANSFERIR RECETAS AL PLC ###
 @app.route('/transferir_receta', methods=['POST'])
 def transferir_receta():
-    agua = request.form['data']
-    factor = leer_factor_balanza(host,connector,client)
-    valores = seleccion_valores_formula(cursor, factor, float(agua))
-    response = actualizar_plc(host,valores,connector,client)
-    return dumps(response)
-
+    try:
+        agua = float(request.form['data'])
+    except Exception as e:
+        print(e)
+        agua = 0
+    finally:
+        factor = leer_factor_balanza(host,connector,client)
+        valores = seleccion_valores_formula(cursor, factor, agua)
+        response = actualizar_plc(host,valores,connector,client)
+        return dumps(response)
+    
 ## DROPDOWN ###################################
 ## VALIDAR TOLVA PT ###
 @app.route('/validar_tolva', methods=['POST'])
@@ -77,6 +82,20 @@ def reemplazar_tolva():
     tolva = request.form['data']
     receta = request.form['receta']
     response = actulizar_tolva_pt(cursor,receta,tolva)
+    return dumps(response)
+
+## MODALES DE VERIFICACION ###################################
+## CONSULTAR- GRASA ###
+@app.route('/consultar_grasa', methods=['POST'])
+def consultar_grasa():
+    response = consultar_registro_grasa(cursor)
+    return dumps(response)
+
+## CAMBIAR GRASA ###
+@app.route('/cambiar_grasa', methods=['POST'])
+def cambiar_grasa():
+    grasa = request.form['data']
+    response = cambiar_registro_grasa(cursor,grasa)
     return dumps(response)
 
 ## CARGA DE ARCHIVO DE EXCEL ########################################################################################################

@@ -209,3 +209,26 @@ def actualizar_plc(host,lista,connector,client):
 
 ########################################################################################
 
+def cambiar_registro_grasa(cursor,grasa):
+    try:
+        cursor.execute("SELECT [RecetaActual].[Codigo],[Tolva] FROM [db_chancay].[dbo].[RecetaActual] INNER JOIN Tolva ON Tolva.Codigo = RecetaActual.Codigo WHERE Tolva.Tolva like 'TA%'")
+        row = cursor.fetchone()
+        cursor.commit()
+        
+        cursor.execute("UPDATE [dbo].[RecetaActual] SET [Cantidad] = {0} WHERE [Codigo] = {1}".format(float(grasa),row[0]))
+        cursor.commit()
+    except:
+        return False
+    
+    return True
+
+########################################################################################
+
+def consultar_registro_grasa(cursor):
+    
+    cursor.execute("SELECT [RecetaActual].[Descripcion],[RecetaActual].[Cantidad] FROM [db_chancay].[dbo].[RecetaActual] INNER JOIN Tolva ON Tolva.Codigo = RecetaActual.Codigo WHERE Tolva.Tolva like 'TA%'")
+    row = cursor.fetchone()
+    value = { "nombre": row[0], 'cantidad': row[1] }
+    cursor.commit()
+    
+    return value

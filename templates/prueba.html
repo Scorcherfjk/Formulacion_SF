@@ -416,7 +416,6 @@ INICIO | SF
     </div>
 </div>
 
-
 <!-- valor de agua -->
 <div class="modal fade" id="agregara_modal" tabindex="-1" role="dialog" aria-labelledby="agregara_contenido_modal"
     aria-hidden="true">
@@ -426,9 +425,12 @@ INICIO | SF
                 <h5 class="modal-title" id="agregara_contenido_modal">Dosificación de agua</h5>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="agrega_agua">Text</label>
-                    <input id="agrega_agua" class="form-control" type="text">
+                <div class="input-group mb-3">
+                    <input id="Agua" type="number" class="form-control" placeholder="Dosificación" aria-label="Dosificación"
+                        aria-describedby="basic-addon2" value="0" min="0" max="10">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Kg/Tn ( Máximo 10Kg )</span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -438,7 +440,6 @@ INICIO | SF
         </div>
     </div>
 </div>
-
 
 <!-- Agregar grasa post pellet ? -->
 <div class="modal fade" id="deseag_modal" tabindex="-1" role="dialog" aria-labelledby="deseag_contenido_modal"
@@ -472,8 +473,15 @@ INICIO | SF
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="agrega_grasa">Text</label>
-                    <input id="agrega_grasa" class="form-control" type="text" name="">
+                    <h6 for="nombreGrasa">Grasa Post Pellet</h6>
+                    <input id="nombreGrasa" class="form-control" type="text" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <input id="GrasaPostPellet" type="text" class="form-control" placeholder="Dosificación" aria-label="Dosificación"
+                        aria-describedby="basic-addon3">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon3">Kg/Tn ( Máximo <span id="maxGrasa"></span>Kg )</span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -531,6 +539,27 @@ INICIO | SF
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-success" onclick="transferirReceta()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error por maximo sobrepasado -->
+<div class="modal fade" id="errorm_modal" tabindex="-1" role="dialog" aria-labelledby="errorm_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="errorm_contenido_modal">Ha ocurrido un error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Ha ingresado un valor de Grasa Post Pellet mayor al máximo aceptado</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
             </div>
         </div>
     </div>

@@ -19,6 +19,10 @@ function recargar() {
     $('#PesoTotalFormula').val('');
     $('#OrdenProd').val('');
     $('#batches').val('');
+    $('#Agua').val('');
+    $('#GrasaPostPellet').val('');
+    
+
 }
 
 function cambiar() {
@@ -32,8 +36,9 @@ function cambiar() {
     $('#PesoTotalFormula').val('');
     $('#OrdenProd').val('');
     $('#batches').val('');
+    $('#Agua').val('');
+    $('#GrasaPostPellet').val('');
 }
-
 
 $(document).ready(function () {
 
@@ -545,16 +550,73 @@ function noAgregarAgua() {
 
 function agregarGrasa() {
     $('#deseag_modal').modal('hide');
-    $('#agregarg_modal').modal({
-        backdrop: 'static',
-        keyboard: false
-    })
-    $('#agregarg_modal').modal('show');
+
+    $.ajax({
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress 
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            // Download progress 
+            xhr.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        url: '/consultar_grasa',
+        type: 'POST',
+        beforeSend: function () {
+            console.log('Enviada');
+        },
+        success: function (response) {
+
+            var response = JSON.parse(response);
+            console.log(response);
+            $('#nombreGrasa').val(response.nombre);
+            $('#maxGrasa').html(response.cantidad);
+            $('#agregarg_modal').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#agregarg_modal').modal('show');
+
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    }).done(function (data) {
+        $('#progress').removeClass('progress-bar-animated');
+    });
+    
+
 };
 
 function noAgregarGrasa() {
-    $('#deseag_modal').modal('hide');
-    $('#resumen_modal').modal('show');
+
+    var grasa = parseFloat($('#GrasaPostPellet').val());
+    var max = parseFloat($('#maxGrasa').html());
+
+    if (isNaN(max)) {
+        $('#deseag_modal').modal('hide');
+        $('#resumen_modal').modal('show');
+    }else{
+        if (grasa <= max) {
+            $('#deseag_modal').modal('hide');
+            $('#resumen_modal').modal('show');
+        } else {
+            $('#errorm_modal').modal('show');
+        }
+    }
 };
 
 function cambiarAgua() {
@@ -564,12 +626,57 @@ function cambiarAgua() {
 
 function cambiarGrasa() {
     $('#agregarg_modal').modal('hide');
-    noAgregarGrasa();
-};
+    var grasa = $('#GrasaPostPellet').val();
+    $.ajax({
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
 
+            // Upload progress 
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            // Download progress 
+            xhr.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        url: '/cambiar_grasa',
+        type: 'POST',
+        data: {
+            'data': grasa
+        },
+        beforeSend: function () {
+            console.log('Enviada');
+        },
+        success: function (response) {
+
+            var response = JSON.parse(response);
+            console.log(response);
+            noAgregarGrasa();
+
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    }).done(function (data) {
+        $('#progress').removeClass('progress-bar-animated');
+    });
+
+    
+};
 
 function transferirReceta() {
     $('#resumen_modal').modal('hide');
+    var agua = $('#Agua').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
@@ -595,7 +702,7 @@ function transferirReceta() {
         url: '/transferir_receta',
         type: 'POST',
         data: {
-            'data': 9
+            'data': agua
         },
         beforeSend: function () {
             console.log('Enviada');
