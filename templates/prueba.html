@@ -1,0 +1,539 @@
+{% extends 'base/base.html' %}
+
+{% block title%}
+INICIO | SF
+{% endblock %}
+
+
+{% block content %}
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <div class="container">
+        <img id="sf" class="sf" src="{{ url_for('static',filename='image/logo2.jpg') }}" alt="">
+        <form class="form-inline col-6">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Selección de Fórmula</span>
+                    </div>
+                    <select id="seleccion" class="custom-select" name="">
+                        <option value="0" selected disabled>Elija una opción</option>
+                        {% for formula in formulas %}
+                        <option value="{{formula.codigo}}">{{formula.codigo}} - {{formula.descripcion}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="progress">
+        <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary"
+            role="progressbar">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Descipción</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Tolva</th>
+                            <th scope="col">Area</th>
+                        </tr>
+                    </thead>
+                    <tbody id="CamposTabla">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Cantidad de Ingredientes</span>
+                        </div>
+                        <input id="CantidadIngredientes" class="form-control" type="text" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Peso Total en Fórmula</span>
+                        </div>
+                        <input id="PesoTotalFormula" class="form-control" type="text" disabled>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div id="especificaciones">
+                <div class="row mb-3">
+                    <div class="col">
+                        <h3>Especificaciones de Batch</h3>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-6 col-form-label">No de Orden de Producción</label>
+                            <div class="col-sm-6">
+                                <input id="OrdenProd" type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-6 col-form-label">No de Batches a Producir</label>
+                            <div class="col-sm-6">
+                                <input id="batches" type="number" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-6 col-form-label">Factor Mezcladora (0.5 -
+                                6.0)</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" disabled value="{{factor}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h3>Seleccione Tolva(s) PT de destino</h3>
+                        <div class="form-group">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">PT01</span>
+                                </div>
+                                <select id="pt01" class="custom-select" name="">
+                                    <option value="0" selected disabled>Elija una opción</option>
+                                    {% for tolva in tolvas_pt %}
+                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                        {{tolva.descripcion}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">PT02</span>
+                                </div>
+                                <select id="pt02" class="custom-select" name="">
+                                    <option value="0" selected disabled>Elija una opción</option>
+                                    {% for tolva in tolvas_pt %}
+                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                        {{tolva.descripcion}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">PT03</span>
+                                </div>
+                                <select id="pt03" class="custom-select" name="">
+                                    <option value="0" selected disabled>Elija una opción</option>
+                                    {% for tolva in tolvas_pt %}
+                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                        {{tolva.descripcion}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="btn-group-vertical w-100" role="group" aria-label="Vertical button group">
+                <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#cargaa_modal"><img
+                        id="" class="" src="{{ url_for('static',filename='image/iBuscar2.ico') }}" alt=""><br>Cargar<br>
+                    Archivo de <br>Fórmulas</button>
+                <button id="boton_validar" class="btn btn-secondary" type="button" disabled><img id="" class=""
+                        src="{{ url_for('static',filename='image/iValidar.ico') }}" alt=""><br>Validar<br>
+                    Fórmula en <br>HMI</button>
+                <button id="boton_transferir" class="btn btn-secondary" type="button" disabled><img id="" class=""
+                        src="{{ url_for('static',filename='image/iTransferir.ico') }}" alt=""><br>Transferir<br>
+                    Datos a <br>HMI</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block modal %}
+
+<!-- Carga de archivo de recetas -->
+<div class="modal fade" id="cargaa_modal" tabindex="-1" role="dialog" aria-labelledby="cargaa_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="cargaa_contenido_modal">Cargar Archivo de Formulas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="custom-file">
+                        <input type="file" id="file" name="file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-success" value="Guardar">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Error de asignacion de tolva -->
+<div class="modal fade" id="errort_modal" tabindex="-1" role="dialog" aria-labelledby="errort_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="errort_contenido_modal">Ha ocurrido un error - Tolvas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Los siguientes Ingredientes de la fórmula <b>NO</b> están asignados a ninguna Tolva</h6>
+                <div id="error_tolva"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error de asignacion de area -->
+<div class="modal fade" id="errora_modal" tabindex="-1" role="dialog" aria-labelledby="errora_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="errora_contenido_modal">Ha ocurrido un error - Área</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Los siguientes Ingredientes de la fórmula <b>NO</b> están asignados a ningún Área</h6>
+                <div id="error_area"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Los ingredientes si estan registrados en el sistema -->
+<div class="modal fade" id="exito_modal" tabindex="-1" role="dialog" aria-labelledby="exito_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-success text-light">
+                <h5 class="modal-title" id="exito_contenido_modal">Carga satisfactoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Todos los ingredientes de la fórmula existen en el sistema</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- tolva PT con valor distinto | dropdown 1 -->
+<div class="modal fade" id="tolvao_modal1" tabindex="-1" role="dialog" aria-labelledby="tolvao_contenido_modal1"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="tolvao_contenido_modal1">Selección de Tolva PT de destino</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>La receta a producirse <b>NO</b> coincide con la existente en la tolva PT seleccionada</h6>
+                <p>¿Desea reemplazar el producto existente?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="rechazar_cambio1" type="button" class="btn btn-secondary"
+                    data-dismiss="modal"><b>NO</b></button>
+                <button id="aceptar_cambio1" type="button" class="btn btn-warning"
+                    data-dismiss="modal"><b>SI</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- tolva PT con valor distinto | dropdown 2 -->
+<div class="modal fade" id="tolvao_modal2" tabindex="-1" role="dialog" aria-labelledby="tolvao_contenido_modal2"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="tolvao_contenido_modal2">Selección de Tolva PT de destino</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>La receta a producirse <b>NO</b> coincide con la existente en la tolva PT seleccionada</h6>
+                <p>¿Desea reemplazar el producto existente?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="rechazar_cambio2" type="button" class="btn btn-secondary"
+                    data-dismiss="modal"><b>NO</b></button>
+                <button id="aceptar_cambio2" type="button" class="btn btn-warning"
+                    data-dismiss="modal"><b>SI</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- tolva PT con valor distinto | dropdown 3 -->
+<div class="modal fade" id="tolvao_modal3" tabindex="-1" role="dialog" aria-labelledby="tolvao_contenido_modal3"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="tolvao_contenido_modal3">Selección de Tolva PT de destino</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>La receta a producirse <b>NO</b> coincide con la existente en la tolva PT seleccionada</h6>
+                <p>¿Desea reemplazar el producto existente?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="rechazar_cambio3" type="button" class="btn btn-secondary"
+                    data-dismiss="modal"><b>NO</b></button>
+                <button id="aceptar_cambio3" type="button" class="btn btn-warning"
+                    data-dismiss="modal"><b>SI</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transferencia al plc hecha con exito -->
+<div class="modal fade" id="exitot_modal" tabindex="-1" role="dialog" aria-labelledby="exitot_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-success text-light">
+                <h5 class="modal-title" id="exitot_contenido_modal">Transferencia satisfactoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Valores de SetPoint de ingredientes transferidos al PLC con éxito</h6>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" href="javascript:location.reload()">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error por numero de batches vacios -->
+<div class="modal fade" id="errorb_modal" tabindex="-1" role="dialog" aria-labelledby="errorb_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="errorb_contenido_modal">Ha ocurrido un error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>No olvide ingresar los datos de:</h6>
+                <ul>
+                    <li>Número de Batches a producir.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error por numero de batches vacios -->
+<div class="modal fade" id="errorpt_modal" tabindex="-1" role="dialog" aria-labelledby="errorpt_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="errorpt_contenido_modal">Ha ocurrido un error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Debe seleccionar al menos una tolva PT</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agregar agua ? -->
+<div class="modal fade" id="deseaa_modal" tabindex="-1" role="dialog" aria-labelledby="deseaa_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="deseaa_contenido_modal">Especificaciones finales</h5>
+                <button type="button" class="close" aria-label="Close" onclick="noAgregarAgua()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>¿Desea adicionar <b>AGUA</b>?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="noAgregarAgua()"><b>NO</b></button>
+                <button type="button" class="btn btn-success" onclick="agregarAgua()"><b>SI</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- valor de agua -->
+<div class="modal fade" id="agregara_modal" tabindex="-1" role="dialog" aria-labelledby="agregara_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="agregara_contenido_modal">Dosificación de agua</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="agrega_agua">Text</label>
+                    <input id="agrega_agua" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                    onclick="cambiarAgua()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Agregar grasa post pellet ? -->
+<div class="modal fade" id="deseag_modal" tabindex="-1" role="dialog" aria-labelledby="deseag_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="deseag_contenido_modal">Especificaciones finales</h5>
+                <button type="button" class="close" aria-label="Close" onclick="noAgregarGrasa()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>¿Desea modificar <b>GRASA POST PELLET</b>?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="noAgregarGrasa()"><b>NO</b></button>
+                <button type="button" class="btn btn-success" onclick="agregarGrasa()"><b>SI</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Valor de grasa post pellet -->
+<div class="modal fade" id="agregarg_modal" tabindex="-1" role="dialog" aria-labelledby="agregarg_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="agregarg_contenido_modal">Dosificación de grasa post pellet</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="agrega_grasa">Text</label>
+                    <input id="agrega_grasa" class="form-control" type="text" name="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="cambiarGrasa()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resultado de receta -->
+<div class="modal fade" id="resumen_modal" tabindex="-1" role="dialog" aria-labelledby="resumen_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="resumen_contenido_modal">Confirmar descarga de los siguientes datos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-light">
+                    <tbody>
+                        <tr>
+                            <td>Formula</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>No. Orden de producción</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>No de Batches a producir</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Factor mezcladora</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Agua</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Grasa PostPellet</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tolvas PT Destino</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="transferirReceta()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
