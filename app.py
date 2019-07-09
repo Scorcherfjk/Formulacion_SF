@@ -36,6 +36,11 @@ def error():
 
 ## EJECUCION ASOCIADA A LAS CARGAS DE AJAX ##########################################################################################
 
+
+
+
+
+
 ## BOTONES PRINCIPALES ########################
 ## CARGAR ARCHIVO DE RECETAS ###
 @app.route('/cargar_receta', methods=['POST'])
@@ -77,6 +82,11 @@ def transferir_receta():
         response = actualizar_plc(host,valores,connector,client)
         return dumps(response)
     
+    
+    
+    
+    
+    
 ## DROPDOWN ###################################
 ## VALIDAR TOLVA PT ###
 @app.route('/validar_tolva', methods=['POST'])
@@ -94,7 +104,13 @@ def reemplazar_tolva():
     response = actulizar_tolva_pt(cursor,receta,tolva)
     return dumps(response)
 
+
+
+
+
+
 ## MODALES DE VERIFICACION ###################################
+
 ## CONSULTAR- GRASA ###
 @app.route('/consultar_grasa', methods=['POST'])
 def consultar_grasa():
@@ -114,6 +130,35 @@ def no_postpellet():
     grasa = 0
     response = cambiar_postpellet(grasa,host,connector,client)
     return dumps(response)
+
+
+
+
+## AGREGAR INGREDIENTE MANUAL ###
+@app.route('/ing_manual', methods=['POST'])
+def ing_manual():
+    valores ={ 
+        'valor': request.form['data'],
+        'ingrediente': request.form['ingrediente'],
+        'zona':  request.form['zona'] 
+    }
+    response = actulizar_ingManual(cursor,valores,host,connector,client)
+    return dumps(response)
+
+## NO AGREGAR INGREDIENTE MANUAL ###
+@app.route('/no_ing_manual', methods=['POST'])
+def no_ing_manual():
+    valores ={ 
+        'valor': 0,
+        'ingrediente': '',
+        'zona':  '' 
+    }
+    response = actulizar_ingManual(cursor,valores,host,connector,client)
+    return dumps(response)
+
+
+
+
 
 ## CARGA DE ARCHIVO DE EXCEL ########################################################################################################
 

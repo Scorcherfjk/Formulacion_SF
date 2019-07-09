@@ -23,8 +23,9 @@ function recargar() {
     $('#batches').val('');
     $('#Agua').val('');
     $('#GrasaPostPellet').val('');
-
-
+    $('#ing_manual').val('0');
+    $('#dosificacion_ingManual').val('');
+    $('#Zona_ing_manual').val('0');
 }
 
 function cambiar() {
@@ -40,6 +41,9 @@ function cambiar() {
     $('#batches').val('');
     $('#Agua').val('');
     $('#GrasaPostPellet').val('');
+    $('#ing_manual').val('0');
+    $('#dosificacion_ingManual').val('');
+    $('#Zona_ing_manual').val('0');
 }
 
 /********* validaciones iniciales para que todo este bloqueado **********/
@@ -88,18 +92,20 @@ $("#seleccion").change(function () {
             var MyDateString = ('0' + MyDate.getDate()).slice(-2) + ('0' + (MyDate.getMonth() + 1)).slice(-2);
             var sel = seleccion.trim();
             var response = JSON.parse(response);
-            var valor;
+            var tabla, select;
             var suma = 0;
             response.forEach(fila => {
-                valor += `<tr>
+                tabla += `<tr>
           <th scope="col">` + fila.codigo + `</th>
           <td class="text-justify">` + fila.descripcion + `</td>
-          <td>` + fila.peso + `</td>
+          <td class="text-right">` + fila.peso + `</td>
           <td id="Tolva_` + fila.codigo + `"></td>
           <td id="Area_` + fila.codigo + `"></td></tr>`;
                 suma += parseFloat(fila.peso);
+                select += `<option value="` + fila.codigo + `">` + fila.codigo + ` - ` + fila.descripcion + `</option>`;
             });
-            $('#CamposTabla').html(valor);
+            $('#CamposTabla').html(tabla);
+            $('#ing_manual').html(select);
             $('#CantidadIngredientes').val(response.length);
             $('#PesoTotalFormula').val(Math.round(suma * 100) / 100);
             $('#OrdenProd').val(sel + MyDateString);
@@ -375,7 +381,7 @@ $("#boton_transferir").click(function () {
 
 });
 
-/********* Boton para validar que la receta esta registrada **********/
+/********* Boton para rechazar cambio de receta en tolva PT **********/
 $("#rechazar_cambio1").click(function () {
     $("#pt01").val('0');
 });
@@ -386,7 +392,7 @@ $("#rechazar_cambio3").click(function () {
     $("#pt03").val('0');
 });
 
-/********* Boton para validar que la receta esta registrada **********/
+/********* Boton para aceptar cambio de receta en tolva PT **********/
 $("#aceptar_cambio1").click(function () {
     $('#progress').css('width', '0%');
     var seleccion_pt = $("#pt01").val();
@@ -535,7 +541,7 @@ $("#aceptar_cambio3").click(function () {
 });
 
 /********* inputs **********/
-/********* input de cantidad de agua no mayor al maximo **********/
+/********* input de cantidad de grasa no mayor al maximo **********/
 $('#GrasaPostPellet').on('keyup', function (){
     var grasa = parseFloat($(this).val());
     var maxGrasa = parseFloat($('#maxGrasa').html());
@@ -546,6 +552,7 @@ $('#GrasaPostPellet').on('keyup', function (){
     }
 });
 
+/********* input de cantidad de agua no mayor al maximo **********/
 $('#Agua').on('keyup',function (){
     var agua = parseFloat($(this).val());
     if (agua <= 10) {
@@ -656,7 +663,7 @@ function noAgregarGrasa() {
             var response = JSON.parse(response);
             console.log(response);
             $('#deseag_modal').modal('hide');
-            resumen_modal()
+            validarTotal()
 
         },
         error: function (error) {
@@ -711,7 +718,7 @@ function cambiarGrasa() {
             var response = JSON.parse(response);
             console.log(response);
             $('#deseag_modal').modal('hide');
-            resumen_modal()
+            validarTotal()
 
         },
         error: function (error) {
@@ -787,15 +794,123 @@ function transferirReceta() {
 };
 
 function resumen_modal() {
-    $('#tbl_agua').val($('#Agua').val());
-    $('#tbl_formula').val($('#seleccion').val());
-    $('#tbl_factor').val($('#factorBalanza').val());
-    $('#tbl_grasa').val($('#GrasaPostPellet').val());
-    $('#tbl_noOrdenProd').val($('#OrdenProd').val());
-    $('#tbl_noBatch').val($('#batches').val());
+    $('#tbl_agua').html($('#Agua').val());
+    var receta = $('#seleccion').find('option:selected');
+    $('#tbl_formula').html(receta.text());
+    $('#tbl_factor').html($('#factorBalanza').val());
+    $('#tbl_grasa').html($('#GrasaPostPellet').val());
+    $('#tbl_noOrdenProd').html($('#OrdenProd').val());
+    $('#tbl_noBatch').html($('#batches').val());
     var pt01 = $('#pt01').val() ? $('#pt01').val() : '';
     var pt02 = $('#pt02').val() ? $('#pt02').val() : '';
     var pt03 = $('#pt03').val() ? $('#pt03').val() : '';
-    $('#tbl_tolvaspt').val(pt01 + " " + pt02 + " " + pt03);
+    $('#tbl_tolvaspt').html(pt01 + " " + pt02 + " " + pt03);
     $('#resumen_modal').modal('show');
-}
+};
+
+function validarTotal() {  
+    if (parseInt($('#PesoTotalFormula').val()) < 999 ) {
+        $('#agregarim_modal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+        $('#agregarim_modal').modal('show');
+    }else{
+        $.ajax({
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+    
+                // Upload progress 
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total * 100;
+                        $('#progress').css('width', percentComplete + '%');
+                    }
+                }, false);
+    
+                // Download progress 
+                xhr.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total * 100;
+                        $('#progress').css('width', percentComplete + '%');
+                    }
+                }, false);
+    
+                return xhr;
+            },
+            url: '/no_ing_manual',
+            type: 'POST',
+            beforeSend: function () {
+                console.log('Enviada');
+            },
+            success: function (response) {
+    
+                var response = JSON.parse(response);
+                console.log(response);
+                $('#agregarim_modal').modal('hide');
+                resumen_modal()
+    
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        }).done(function (data) {
+            $('#progress').removeClass('progress-bar-animated');
+        });
+    }
+};
+
+function cambiarIngManual(){
+    
+    var ingrediente = $('#ing_manual').val();
+    var valor = $('#dosificacion_ingManual').val();
+    var zona = $('#Zona_ing_manual').val();
+
+    $.ajax({
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress 
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            // Download progress 
+            xhr.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total * 100;
+                    $('#progress').css('width', percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        url: '/ing_manual',
+        type: 'POST',
+        data: {
+            'data': valor,
+            'ingrediente': ingrediente,
+            'zona': zona
+        },
+        beforeSend: function () {
+            console.log('Enviada');
+        },
+        success: function (response) {
+
+            var response = JSON.parse(response);
+            console.log(response);
+            $('#agregarim_modal').modal('hide');
+            resumen_modal()
+
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    }).done(function (data) {
+        $('#progress').removeClass('progress-bar-animated');
+    });
+
+};

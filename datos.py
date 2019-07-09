@@ -134,7 +134,7 @@ def validar_formula_ajax(cursor):
 
 def validar_tolva_pt(cursor,receta,tolva):
     
-    cursor.execute("SELECT [Codigo] FROM [db_chancay].[dbo].[Tolva] WHERE [id_Tolva] = {}".format(int(tolva)))
+    cursor.execute("SELECT [Codigo] FROM [db_chancay].[dbo].[Tolva] WHERE [Tolva] = '{}'".format(tolva))
     row = cursor.fetchone()
     codigo = row[0]
     cursor.commit()
@@ -153,7 +153,7 @@ def actulizar_tolva_pt(cursor,receta,tolva):
         value = { "codigo": row[0], "descripcion" : row[1] }
         cursor.commit()
         
-        cursor.execute("UPDATE [dbo].[Tolva] SET [Descripcion] = '{0}' ,[Codigo] = {1} WHERE [id_Tolva] = '{2}'".format(
+        cursor.execute("UPDATE [dbo].[Tolva] SET [Descripcion] = '{0}' ,[Codigo] = {1} WHERE [Tolva] = '{2}'".format(
                 value['descripcion'],int(value['codigo']),tolva))
         cursor.commit()
     except:
@@ -333,3 +333,29 @@ def cambiar_postpellet(grasa,host,connector,client):
         
 #############################################################################################################################
     
+    
+def actulizar_ingManual(cursor,valores,host,connector,client):
+    try:
+        cursor.execute("SELECT [Codigo] ,[Descripcion] FROM [db_chancay].[dbo].[RecetaActual] WHERE [Codigo] = {}".format(int(valores['ingrediente'])))
+        row = cursor.fetchone()
+        value = { "codigo": row[0], "descripcion" : row[1] }
+        cursor.commit()
+    except Exception as e:
+        value = { "codigo": '', "descripcion" : '' }
+    
+    try:
+        cambioTexto(host,connector,client,'INGMAN_CODE',listaASCII( str(value['codigo']) ))
+        cambioTexto(host,connector,client,'INGMAN_DESC',listaASCII( value['descripcion'] ))
+        cambioTexto(host,connector,client,'INGMAN_ZONA',listaASCII( valores['zona'] ))
+        
+        tags = ["INGMAN_SP=(REAL){}".format(valores['valor'])]
+        resultado = []
+        with connector( host=host ) as conn:
+            for index,descr,op,reply,status,value in conn.pipeline(operations=client.parse_operations( tags ), depth=2 ):
+                resultado.append(value)
+        
+    except Exception as e:
+        print(e)
+        return False
+
+    return True

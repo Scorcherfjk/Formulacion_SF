@@ -8,7 +8,7 @@ INICIO | SF
 {% block content %}
 <nav class="navbar navbar-light bg-light justify-content-between">
     <div class="container">
-        <img id="sf" class="sf" src="{{ url_for('static',filename='image/logo2.jpg') }}" alt="">
+        <a href=""><img id="sf" class="sf" src="{{ url_for('static',filename='image/logo2.jpg') }}" alt=""></a>
         <form class="form-inline col-6">
             <div class="form-group">
                 <div class="input-group mb-3">
@@ -108,7 +108,7 @@ INICIO | SF
                                 <select id="pt01" class="custom-select" name="">
                                     <option value="0" selected disabled>Elija una opción</option>
                                     {% for tolva in tolvas_pt %}
-                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                    <option value="{{tolva.tolva}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
                                         {{tolva.descripcion}}</option>
                                     {% endfor %}
                                 </select>
@@ -120,7 +120,7 @@ INICIO | SF
                                 <select id="pt02" class="custom-select" name="">
                                     <option value="0" selected disabled>Elija una opción</option>
                                     {% for tolva in tolvas_pt %}
-                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                    <option value="{{tolva.tolva}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
                                         {{tolva.descripcion}}</option>
                                     {% endfor %}
                                 </select>
@@ -132,7 +132,7 @@ INICIO | SF
                                 <select id="pt03" class="custom-select" name="">
                                     <option value="0" selected disabled>Elija una opción</option>
                                     {% for tolva in tolvas_pt %}
-                                    <option value="{{tolva.id}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
+                                    <option value="{{tolva.tolva}}"><b>{{tolva.tolva}}</b> {{tolva.codigo}} -
                                         {{tolva.descripcion}}</option>
                                     {% endfor %}
                                 </select>
@@ -486,7 +486,8 @@ INICIO | SF
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn_cambiarGrasa" type="button" class="btn btn-success" onclick="cambiarGrasa()" disabled>Guardar</button>
+                <button id="btn_cambiarGrasa" type="button" class="btn btn-success" onclick="cambiarGrasa()"
+                    disabled>Guardar</button>
             </div>
         </div>
     </div>
@@ -505,55 +506,38 @@ INICIO | SF
             </div>
             <div class="modal-body">
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Formula</span>
-                    </div>
-                    <input id="tbl_formula" type="text" class="form-control" disabled
-                     aria-describedby="basic-addon1">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon4">No. Orden de producción</span>
-                    </div>
-                    <input id="tbl_noOrdenProd" type="text" class="form-control" disabled
-                     aria-describedby="basic-addon4">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon5">No de Batches a producir</span>
-                    </div>
-                    <input id="tbl_noBatch" type="text" class="form-control" disabled
-                     aria-describedby="basic-addon5">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon6">Factor mezcladora</span>
-                    </div>
-                    <input id="tbl_factor" type="text" class="form-control" disabled
-                        aria-describedby="basic-addon6">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon7">Agua</span>
-                    </div>
-                    <input id="tbl_agua" type="text" class="form-control" disabled
-                        aria-describedby="basic-addon7">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon8">Grasa PostPellet</span>
-                    </div>
-                    <input id="tbl_grasa" type="text" class="form-control" disabled
-                        aria-describedby="basic-addon8">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon9">Tolvas PT Destino</span>
-                    </div>
-                    <input id="tbl_tolvaspt" type="text" class="form-control" disabled
-                     aria-describedby="basic-addon9">
-                </div>
+                <table class="table table-bordered table-striped mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-justify">Formula</td>
+                            <td class="text-right" id="tbl_formula"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">No. Orden de producción</td>
+                            <td class="text-right" id="tbl_noOrdenProd"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">No de Batches a producir</td>
+                            <td class="text-right" id="tbl_noBatch"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Factor mezcladora</td>
+                            <td class="text-right" id="tbl_factor"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Agua</td>
+                            <td class="text-right" id="tbl_agua"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Grasa PostPellet</td>
+                            <td class="text-right" id="tbl_grasa"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Tolvas PT Destino</td>
+                            <td class="text-right" id="tbl_tolvaspt"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -563,5 +547,42 @@ INICIO | SF
     </div>
 </div>
 
+<div class="modal fade" id="agregarim_modal" tabindex="-1" role="dialog" aria-labelledby="agregarim_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="agregarim_contenido_modal">Ingreso de ingrediente manual</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Selección de Ingrediente</label>
+                    <select id="ing_manual" class="custom-select" name="">
+                        <option value="0" selected disabled>Elija una opción</option>
+
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <input id="dosificacion_ingManual" type="text" class="form-control" placeholder="Dosificación"
+                        aria-label="Dosificación" aria-describedby="basic-addon10">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon10">Kg/Tn </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Zona de adición</label>
+                    <select id="Zona_ing_manual" class="custom-select" name="">
+                        <option value="0" selected disabled>Elija una opción</option>
+                        <option value="Mezcladora">Mezcladora</option>
+                        <option value="MicroIngredientes">MicroIngredientes</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="cambiarIngManual()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
