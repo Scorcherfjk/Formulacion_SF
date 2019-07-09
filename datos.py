@@ -215,14 +215,18 @@ def actualizar_plc(host,lista,connector,client):
 
 ########################################################################################
 
-def cambiar_registro_grasa(cursor,grasa):
+def cambiar_registro_grasa(cursor,grasa,host,connector,client):
     try:
-        cursor.execute("SELECT [RecetaActual].[Codigo],[Tolva] FROM [db_chancay].[dbo].[RecetaActual] INNER JOIN Tolva ON Tolva.Codigo = RecetaActual.Codigo WHERE Tolva.Tolva like 'TA%'")
+        cursor.execute("SELECT [RecetaActual].[Codigo], [RecetaActual].[Cantidad],[Tolva] FROM [db_chancay].[dbo].[RecetaActual] INNER JOIN Tolva ON Tolva.Codigo = RecetaActual.Codigo WHERE Tolva.Tolva like 'TA%'")
         row = cursor.fetchone()
         cursor.commit()
         
-        cursor.execute("UPDATE [dbo].[RecetaActual] SET [Cantidad] = {0} WHERE [Codigo] = {1}".format(float(grasa),row[0]))
+        grasa_restante = row[1] - float(grasa)
+        cursor.execute("UPDATE [dbo].[RecetaActual] SET [Cantidad] = {0} WHERE [Codigo] = {1}".format(grasa_restante,row[0]))
         cursor.commit()
+        
+        cambiar_postpellet(grasa,host,connector,client)
+
     except:
         return False
     
@@ -260,7 +264,6 @@ def cambioTexto(host,connector,client,tag,var_ascii):
 
 #############################################################################################################################
 
-
 def actualizar_batch(host,connector,client, valor):
     
     tags = ["BATCH_SEQ.PRE=(REAL){}".format(valor)]
@@ -272,6 +275,7 @@ def actualizar_batch(host,connector,client, valor):
         
     return tags
 
+#############################################################################################################################
 
 def cambiar_string_plc(cursor, host,connector,client,diccionario):
     try:
@@ -309,3 +313,23 @@ def cambiar_string_plc(cursor, host,connector,client,diccionario):
     cambioTexto(host,connector,client,'TOLVAPT01',listaASCII(pt01))
     cambioTexto(host,connector,client,'TOLVAPT02',listaASCII(pt02))
     cambioTexto(host,connector,client,'TOLVAPT03',listaASCII(pt03))
+    
+#############################################################################################################################
+
+def cambiar_postpellet(grasa,host,connector,client):
+        factor = leer_factor_balanza(host,connector,client)
+        grasa_aumentada = float(grasa) * float(factor)
+        
+        tags = [
+            "POSTPELLET_CTRL.SP2=(REAL){}".format(grasa_aumentada),
+            "POSTPELLET_PESO=(REAL){}".format(grasa_aumentada)
+        ]
+        resultado = []
+        with connector( host=host ) as conn:
+            for index,descr,op,reply,status,value in conn.pipeline(operations=client.parse_operations( tags ), depth=2 ):
+                resultado.append(value)
+        
+        return resultado
+        
+#############################################################################################################################
+    

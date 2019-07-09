@@ -32,8 +32,6 @@ def login():
 
 @app.route('/error')
 def error():
-	if session:
-		session.clear()
 	return render_template('error.html')
 
 ## EJECUCION ASOCIADA A LAS CARGAS DE AJAX ##########################################################################################
@@ -107,7 +105,14 @@ def consultar_grasa():
 @app.route('/cambiar_grasa', methods=['POST'])
 def cambiar_grasa():
     grasa = request.form['data']
-    response = cambiar_registro_grasa(cursor,grasa)
+    response = cambiar_registro_grasa(cursor,grasa,host,connector,client)
+    return dumps(response)
+
+## NO CAMBIAR GRASA ###
+@app.route('/no_postpellet', methods=['POST'])
+def no_postpellet():
+    grasa = 0
+    response = cambiar_postpellet(grasa,host,connector,client)
     return dumps(response)
 
 ## CARGA DE ARCHIVO DE EXCEL ########################################################################################################

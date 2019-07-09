@@ -94,7 +94,7 @@ INICIO | SF
                             <label for="inputEmail3" class="col-sm-6 col-form-label">Factor Mezcladora (0.5 -
                                 6.0)</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" disabled value="{{factor}}">
+                                <input id="factorBalanza" type="text" class="form-control" disabled value="{{factor}}">
                             </div>
                         </div>
                     </div>
@@ -426,16 +426,16 @@ INICIO | SF
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3">
-                    <input id="Agua" type="number" class="form-control" placeholder="Dosificación" aria-label="Dosificación"
-                        aria-describedby="basic-addon2" value="0" min="0" max="10">
+                    <input id="Agua" type="text" class="form-control" placeholder="Dosificación"
+                        aria-label="Dosificación" aria-describedby="basic-addon2" value="0" min="0" max="10">
                     <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Kg/Tn ( Máximo 10Kg )</span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"
-                    onclick="cambiarAgua()">Guardar</button>
+                <button id="btn_cambiarAgua" type="button" class="btn btn-success" data-dismiss="modal"
+                    onclick="cambiarAgua()" disabled>Guardar</button>
             </div>
         </div>
     </div>
@@ -477,36 +477,16 @@ INICIO | SF
                     <input id="nombreGrasa" class="form-control" type="text" disabled>
                 </div>
                 <div class="input-group mb-3">
-                    <input id="GrasaPostPellet" type="text" class="form-control" placeholder="Dosificación" aria-label="Dosificación"
-                        aria-describedby="basic-addon3">
+                    <input id="GrasaPostPellet" type="text" class="form-control" placeholder="Dosificación"
+                        aria-label="Dosificación" aria-describedby="basic-addon3">
                     <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon3">Kg/Tn ( Máximo <span id="maxGrasa"></span>Kg )</span>
+                        <span class="input-group-text" id="basic-addon3">Kg/Tn ( Máximo <span id="maxGrasa"></span>Kg
+                            )</span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="cambiarGrasa()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Error por maximo sobrepasado -->
-<div class="modal fade" id="errorm_modal" tabindex="-1" role="dialog" aria-labelledby="errorm_contenido_modal"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content ">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title" id="errorm_contenido_modal">Ha ocurrido un error</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h6>Ha ingresado un valor de Grasa Post Pellet mayor al máximo aceptado</h6>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal">Aceptar</button>
+                <button id="btn_cambiarGrasa" type="button" class="btn btn-success" onclick="cambiarGrasa()" disabled>Guardar</button>
             </div>
         </div>
     </div>
@@ -524,42 +504,60 @@ INICIO | SF
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-light">
-                    <tbody>
-                        <tr>
-                            <th>Formula</th>
-                            <td id="tbl_formula"></td>
-                        </tr>
-                        <tr>
-                            <th>No. Orden de producción</th>
-                            <td id="tbl_noOrdenProd"></td>
-                        </tr>
-                        <tr>
-                            <th>No de Batches a producir</th>
-                            <td id="tbl_noBatch"></td>
-                        </tr>
-                        <tr>
-                            <th>Factor mezcladora</th>
-                            <td id="tbl_factor"></td>
-                        </tr>
-                        <tr>
-                            <th>Agua</th>
-                            <td id="tbl_agua"></td>
-                        </tr>
-                        <tr>
-                            <th>Grasa PostPellet</th>
-                            <td id="tbl_grasa"></td>
-                        </tr>
-                        <tr>
-                            <th>Tolvas PT Destino</th>
-                            <td id="tbl_tolvaspt"></td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Formula</span>
+                    </div>
+                    <input id="tbl_formula" type="text" class="form-control" disabled
+                     aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon4">No. Orden de producción</span>
+                    </div>
+                    <input id="tbl_noOrdenProd" type="text" class="form-control" disabled
+                     aria-describedby="basic-addon4">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon5">No de Batches a producir</span>
+                    </div>
+                    <input id="tbl_noBatch" type="text" class="form-control" disabled
+                     aria-describedby="basic-addon5">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon6">Factor mezcladora</span>
+                    </div>
+                    <input id="tbl_factor" type="text" class="form-control" disabled
+                        aria-describedby="basic-addon6">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon7">Agua</span>
+                    </div>
+                    <input id="tbl_agua" type="text" class="form-control" disabled
+                        aria-describedby="basic-addon7">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon8">Grasa PostPellet</span>
+                    </div>
+                    <input id="tbl_grasa" type="text" class="form-control" disabled
+                        aria-describedby="basic-addon8">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon9">Tolvas PT Destino</span>
+                    </div>
+                    <input id="tbl_tolvaspt" type="text" class="form-control" disabled
+                     aria-describedby="basic-addon9">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="transferirReceta()">Guardar</button>
+                <button type="button" class="btn btn-success" onclick="transferirReceta()">Confirmar</button>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 def conexion():
     import pyodbc 
 
-    server = 'DESKTOP-QV8E63C\\SQLEXPRESS' 
+    server = '192.168.1.25\\SQLEXPRESS' 
     database = 'db_chancay' 
     username = 'sa' 
     password = 'Controlsi' 
