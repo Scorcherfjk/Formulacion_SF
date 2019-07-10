@@ -1,0 +1,209 @@
+{% extends 'base/base.html' %}
+
+{% block title%}
+INICIO | SF
+{% endblock %}
+
+
+{% block content %}
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <div class="container">
+        <a href="/ingredientes"><img id="sf" class="sf" src="{{ url_for('static',filename='image/logo2.jpg') }}" alt=""></a>
+        <div class="float-left">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#nuevo_modal">Nuevo
+                ingrediente</button>
+        </div>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="progress">
+        <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary"
+            role="progressbar">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <table class="tabla table table-bordered table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Código</th>
+                        <th scope="col">Descipción</th>
+                        <th scope="col">Habilitado</th>
+                        <th scope="col">Area</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="CamposTabla">
+                    {% for ingrediente in ingredientes %}
+                    <tr>
+                        <th class="align-middle"> {{ ingrediente.codigo }} </th>
+                        <td class="align-middle text-justify"> {{ ingrediente.descripcion }} </td>
+                        <td class="align-middle">
+                            {% if ingrediente.habilitado %}
+                            <i class="fa-2x text-success">&check;</i>
+                            {% else %}
+                            <i class="fa-2x text-danger">&times;</i>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle"> {{ ingrediente.area }} </td>
+                        <th class="align-middle">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="modalModificar({{ingrediente.id}})">Modificar</button>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block modal %}
+
+<!-- Modificar ingrediente -->
+<div class="modal fade" id="modificar_modal" tabindex="-1" role="dialog" aria-labelledby="modificar_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="modificar_contenido_modal">Cambiar datos del ingrediente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="id_ingrediente">
+                <table class="table table-bordered table-striped mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-justify">Habilitado</td>
+                            <td class="text-right">
+                                <select id="tbl_habilitado" class="custom-select" name="">
+                                        <option disabled>Elija una opción</option>
+                                        <option value="0">Inhabilitado</option>
+                                        <option value="1">Habilitado</option>
+                                    </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Código</td>
+                            <td><input id="tbl_codigo" type="text" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Descipción</td>
+                            <td><input id="tbl_descripcion" type="text" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Área</td>
+                            <td>
+                                <select id="tbl_area" class="custom-select" name="">
+                                    <option value="0" disabled>Elija una opción</option>
+                                    <option value="1">IN</option>
+                                    <option value="2">M2</option>
+                                    <option value="3">L1</option>
+                                    <option value="4">L2</option>
+                                    <option value="5">MA</option>
+                                    <option value="6">NU</option>
+                                    <option value="7">MI</option>
+                                    <option value="8">*</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="modificarIngrediente()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nuevo ingrediente -->
+<div class="modal fade" id="nuevo_modal" tabindex="-1" role="dialog" aria-labelledby="nuevo_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="nuevo_contenido_modal">Registrar nuevo ingrediente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <table class="table table-bordered table-striped mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-justify">Habilitado</td>
+                            <td class="text-right">
+                                <select id="nuevo_habilitado" class="custom-select">
+                                        <option disabled selected>Elija una opción</option>
+                                        <option value="0">Inhabilitado</option>
+                                        <option value="1">Habilitado</option>
+                                    </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Código</td>
+                            <td><input id="nuevo_codigo" type="text" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Descipción</td>
+                            <td><input id="nuevo_descripcion" type="text" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-justify">Área</td>
+                            <td>
+                                <select id="nuevo_area" class="custom-select">
+                                    <option disabled selected>Elija una opción</option>
+                                    <option value="1">IN</option>
+                                    <option value="2">M2</option>
+                                    <option value="3">L1</option>
+                                    <option value="4">L2</option>
+                                    <option value="5">MA</option>
+                                    <option value="6">NU</option>
+                                    <option value="7">MI</option>
+                                    <option value="8">*</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="nuevoIngrediente()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaccion hecha exito -->
+<div class="modal fade" id="exito_modal" tabindex="-1" role="dialog" aria-labelledby="exito_contenido_modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-success text-light">
+                <h5 class="modal-title" id="exito_contenido_modal">Transacción satisfactoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>¡Enhorabuena! Los datos se han cargado satisfactoriamente</h6>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" href="javascript:location.reload()">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
