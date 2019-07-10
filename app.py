@@ -4,7 +4,8 @@ from datetime import datetime
 from flask import Flask, request, render_template, session, jsonify
 from flask import redirect, url_for, request, send_file
 from database import *
-from datos import *
+from formulacion import *
+from ingredientes import *
 from json import dumps
 import flask_excel as excel
 from cpppo.server.enip.client import connector
@@ -17,21 +18,37 @@ try:
 	cursor, cnxn = conexion()
 except Exception as e:
 	print(e)
-	redirect(url_for('error'))
+	redirect(url_for('error_general'))
+ 
+ 
+ 
+ 
  
 ## PAGINA DE INICIO DE LA APLICACION ###############################################################################################
 
 @app.route('/', methods=['GET'])
 def login():
-    formulas = seleccion_formula(cursor)
-    tolvas = seleccion_tolvas(cursor)
-    factor = leer_factor_balanza(host,connector,client)
-    return render_template('prueba.html', formulas=formulas, tolvas_pt=tolvas, factor=factor)
-
+    try:
+        formulas = seleccion_formula(cursor)
+        tolvas = seleccion_tolvas(cursor)
+        factor = leer_factor_balanza(host,connector,client)
+        return render_template('formulacion.html', formulas=formulas, tolvas_pt=tolvas, factor=factor)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
+        
 ## PAGINA EN CASO DE ERROR ##########################################################################################################
 
-@app.route('/error')
+@app.route('/error_formulacion')
 def error():
+	return render_template('error_formulacion.html')
+
+@app.route('/error_ingredientes')
+def error_ing():
+	return render_template('error_ingredientes.html')
+
+@app.route('/error_general')
+def error_general():
 	return render_template('error.html')
 
 ## EJECUCION ASOCIADA A LAS CARGAS DE AJAX ##########################################################################################
@@ -45,16 +62,24 @@ def error():
 ## CARGAR ARCHIVO DE RECETAS ###
 @app.route('/cargar_receta', methods=['POST'])
 def cargar_receta():
-    seleccion = request.form['data']
-    cargar_receta_actual(cursor, seleccion)
-    response = resultadoAjax(cursor)
-    return dumps(response)
+    try:
+        seleccion = request.form['data']
+        cargar_receta_actual(cursor, seleccion)
+        response = resultadoAjax(cursor)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 ## VALIDAR RECETAS ###
 @app.route('/validar_receta', methods=['POST'])
 def validar_receta():
-    response = validar_formula_ajax(cursor)
-    return dumps(response)
+    try:
+        response = validar_formula_ajax(cursor)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 ## TRANSFERIR RECETAS AL PLC ###
 @app.route('/transferir_receta', methods=['POST'])
@@ -91,18 +116,26 @@ def transferir_receta():
 ## VALIDAR TOLVA PT ###
 @app.route('/validar_tolva', methods=['POST'])
 def validar_tolva():
-    tolva = request.form['data']
-    receta = request.form['receta']
-    response = validar_tolva_pt(cursor,receta,tolva)
-    return dumps(response)
+    try:
+        tolva = request.form['data']
+        receta = request.form['receta']
+        response = validar_tolva_pt(cursor,receta,tolva)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 ## CAMBIAR TOLVA PT ###
 @app.route('/reemplazar_tolva', methods=['POST'])
 def reemplazar_tolva():
-    tolva = request.form['data']
-    receta = request.form['receta']
-    response = actulizar_tolva_pt(cursor,receta,tolva)
-    return dumps(response)
+    try:
+        tolva = request.form['data']
+        receta = request.form['receta']
+        response = actulizar_tolva_pt(cursor,receta,tolva)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 
 
@@ -114,47 +147,65 @@ def reemplazar_tolva():
 ## CONSULTAR- GRASA ###
 @app.route('/consultar_grasa', methods=['POST'])
 def consultar_grasa():
-    response = consultar_registro_grasa(cursor)
-    return dumps(response)
-
+    try:
+        response = consultar_registro_grasa(cursor)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 ## CAMBIAR GRASA ###
 @app.route('/cambiar_grasa', methods=['POST'])
 def cambiar_grasa():
-    grasa = request.form['data']
-    response = cambiar_registro_grasa(cursor,grasa,host,connector,client)
-    return dumps(response)
+    try:
+        grasa = request.form['data']
+        response = cambiar_registro_grasa(cursor,grasa,host,connector,client)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 ## NO CAMBIAR GRASA ###
 @app.route('/no_postpellet', methods=['POST'])
 def no_postpellet():
-    grasa = 0
-    response = cambiar_postpellet(grasa,host,connector,client)
-    return dumps(response)
-
+    try:
+        grasa = 0
+        response = cambiar_postpellet(grasa,host,connector,client)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 
 
 ## AGREGAR INGREDIENTE MANUAL ###
 @app.route('/ing_manual', methods=['POST'])
 def ing_manual():
-    valores ={ 
-        'valor': request.form['data'],
-        'ingrediente': request.form['ingrediente'],
-        'zona':  request.form['zona'] 
-    }
-    response = actulizar_ingManual(cursor,valores,host,connector,client)
-    return dumps(response)
+    try:
+        valores ={ 
+            'valor': request.form['data'],
+            'ingrediente': request.form['ingrediente'],
+            'zona':  request.form['zona'] 
+        }
+        response = actulizar_ingManual(cursor,valores,host,connector,client)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 ## NO AGREGAR INGREDIENTE MANUAL ###
 @app.route('/no_ing_manual', methods=['POST'])
 def no_ing_manual():
-    valores ={ 
-        'valor': 0,
-        'ingrediente': '',
-        'zona':  '' 
-    }
-    response = actulizar_ingManual(cursor,valores,host,connector,client)
-    return dumps(response)
+    try:    
+        valores ={ 
+            'valor': 0,
+            'ingrediente': '',
+            'zona':  '' 
+        }
+        response = actulizar_ingManual(cursor,valores,host,connector,client)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error'))
 
 
 
@@ -169,13 +220,73 @@ def upload_file():
             archivo = request.get_array(field_name='file')
             carga_archivo_receta(cursor,archivo)
             return redirect(url_for('login'))
-    except:
+    except Exception as e:
+        print(e)
         return redirect(url_for('error'))
     
     return redirect(url_for('error'))
 
-## FIN DEL PROGRAMA ####### COMIENZO DE EJECUCION ###################################################################################
+## FIN DEL PROGRAMA #################################################################################################################
 
+
+## INICIO DE LA APLICACION DE INGREDIENTES ##########################################################################################
+## RUTE INICIAL DE INGREDIENTES ###
+@app.route('/ingredientes', methods=['GET'])
+def ingredientes():
+    try:
+        ingredientes = leer_ingredientes(cursor)
+        return render_template('ingredientes.html', ingredientes=ingredientes)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error_ing'))
+    
+## CARGAR DATOS DE INGREDIENTES EN LA MODAL ###
+@app.route('/datos_ingrediente', methods=['POST'])
+def datos_ingrediente():
+    try:
+        id_ingrediente = int(request.form['data'])
+        response = consultar_ingrediente(cursor,id_ingrediente)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error_ing'))
+    
+## CARGAR NUEVO INGREDIENTE ###
+@app.route('/nuevo_ingrediente', methods=['POST'])
+def nuevo_ingrediente():
+    try:
+        datos = {
+            'habilitado': request.form['habilitado'],
+            'codigo': request.form['codigo'],
+            'descripcion': request.form['descripcion'],
+            'area': request.form['area']
+        }
+        
+        response = grabar_ingrediente(cursor,datos)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error_ing'))
+    
+## MODIFICAR INGREDIENTE ###
+@app.route('/modificar_ingrediente', methods=['POST'])
+def modificar_ingrediente():
+    try:
+        datos = {
+            'id': request.form['data'],
+            'habilitado': request.form['habilitado'],
+            'codigo': request.form['codigo'],
+            'descripcion': request.form['descripcion'],
+            'area': request.form['area']
+        }
+        
+        response = cambiar_ingrediente(cursor,datos)
+        return dumps(response)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('error_ing'))
+    
+## FIN DEL PROGRAMA ####### COMIENZO DE EJECUCION ###################################################################################
 
 if __name__ == '__main__':
     excel.init_excel(app)
