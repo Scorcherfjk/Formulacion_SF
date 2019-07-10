@@ -42,7 +42,7 @@ $(document).ready(function () {
 
 /********* Dropdowns **********/
 /********* Dropdown de seleccion de recetas **********/
-$("#seleccion").change(function () {
+$('#seleccion').change(function () {
     cambiar();
     $('#progress').css('width', '0%');
     var seleccion = $(this).val()
@@ -51,7 +51,7 @@ $("#seleccion").change(function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -59,7 +59,7 @@ $("#seleccion").change(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -83,15 +83,10 @@ $("#seleccion").change(function () {
             var response = JSON.parse(response);
             var tabla, select;
             var suma = 0;
-            response.forEach(fila => {
-                tabla += `<tr>
-          <th scope="col">` + fila.codigo + `</th>
-          <td class="text-justify">` + fila.descripcion + `</td>
-          <td class="text-right">` + fila.peso + `</td>
-          <td id="Tolva_` + fila.codigo + `"></td>
-          <td id="Area_` + fila.codigo + `"></td></tr>`;
+            response.forEach(function(fila){
+                tabla += "<tr><th scope='col'>" + fila.codigo + "</th><td class='text-justify'>" + fila.descripcion + "</td><td class='text-right'>" + fila.peso + "</td><td id='Tolva_" + fila.codigo + "'></td><td id='Area_" + fila.codigo + "'></td></tr>";
                 suma += parseFloat(fila.peso);
-                select += `<option value="` + fila.codigo + `">` + fila.codigo + ` - ` + fila.descripcion + `</option>`;
+                select += "<option value='" + fila.codigo + "'>" + fila.codigo + " - " + fila.descripcion + "</option>";
             });
             $('#CamposTabla').html(tabla);
             $('#ing_manual').html(select);
@@ -109,16 +104,16 @@ $("#seleccion").change(function () {
 });
 
 /********* Dropdown de producto terminado pt01 **********/
-$("#pt01").change(function () {
+$('#pt01').change(function () {
     $('#progress').css('width', '0%');
     var seleccion_pt = $(this).val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -126,7 +121,7 @@ $("#pt01").change(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -159,16 +154,16 @@ $("#pt01").change(function () {
 });
 
 /********* Dropdown de producto terminado pt02 **********/
-$("#pt02").change(function () {
+$('#pt02').change(function () {
     $('#progress').css('width', '0%');
     var seleccion_pt = $(this).val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -176,7 +171,7 @@ $("#pt02").change(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -209,16 +204,16 @@ $("#pt02").change(function () {
 });
 
 /********* Dropdown de producto terminado pt03 **********/
-$("#pt03").change(function () {
+$('#pt03').change(function () {
     $('#progress').css('width', '0%');
     var seleccion_pt = $(this).val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -226,7 +221,7 @@ $("#pt03").change(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -260,14 +255,14 @@ $("#pt03").change(function () {
 
 /********* Botones **********/
 /********* Boton para validar que la receta esta registrada **********/
-$("#boton_validar").click(function () {
+$('#boton_validar').click(function () {
     $('#progress').css('width', '0%');
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -275,7 +270,7 @@ $("#boton_validar").click(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -295,12 +290,12 @@ $("#boton_validar").click(function () {
             var vacios_tolva = [];
             var vacios_area = [];
 
-            response.forEach(fila => {
+            response.forEach(function(fila){
                 if (!fila.tolva) vacios_tolva.push(fila);
                 if (!fila.area) vacios_area.push(fila);
 
-                let tolva = "#Tolva_" + fila.codigo;
-                let area = "#Area_" + fila.codigo;
+                let tolva = '#Tolva_' + fila.codigo;
+                let area = '#Area_' + fila.codigo;
                 $(tolva).html(fila.tolva);
                 $(area).html(fila.area);
             });
@@ -311,21 +306,21 @@ $("#boton_validar").click(function () {
                 $('#especificaciones').show();
             } else {
                 if (vacios_tolva.length > 0) {
-                    let valor_tolva = "<ul>";
-                    vacios_tolva.forEach(fila => {
-                        valor_tolva += "<li>" + fila.codigo + " - " + fila.descripcion + "</li>";
+                    let valor_tolva = '<ul>';
+                    vacios_tolva.forEach(function(fila){
+                        valor_tolva += '<li>' + fila.codigo + ' - ' + fila.descripcion + '</li>';
                     });
-                    valor_tolva += "</ul>";
+                    valor_tolva += '</ul>';
                     $('#error_tolva').html(valor_tolva);
                     $('#errort_modal').modal('show');
                 }
 
                 if (vacios_area.length > 0) {
-                    let valor_area = "<ul>";
-                    vacios_area.forEach(fila => {
-                        valor_area += "<li>" + fila.codigo + " - " + fila.descripcion + "</li>";
+                    let valor_area = '<ul>';
+                    vacios_area.forEach(function(fila){
+                        valor_area += '<li>' + fila.codigo + ' - ' + fila.descripcion + '</li>';
                     });
-                    valor_area += "</ul>";
+                    valor_area += '</ul>';
                     $('#error_area').html(valor_area);
                     $('#errora_modal').modal('show');
                 }
@@ -341,7 +336,7 @@ $("#boton_validar").click(function () {
 });
 
 /********* Boton para transferir los datos al PLC **********/
-$("#boton_transferir").click(function () {
+$('#boton_transferir').click(function () {
     var val_a = false,
         val_b = false;
 
@@ -371,27 +366,27 @@ $("#boton_transferir").click(function () {
 });
 
 /********* Boton para rechazar cambio de receta en tolva PT **********/
-$("#rechazar_cambio1").click(function () {
-    $("#pt01").val('0');
+$('#rechazar_cambio1').click(function () {
+    $('#pt01').val('0');
 });
-$("#rechazar_cambio2").click(function () {
-    $("#pt02").val('0');
+$('#rechazar_cambio2').click(function () {
+    $('#pt02').val('0');
 });
-$("#rechazar_cambio3").click(function () {
-    $("#pt03").val('0');
+$('#rechazar_cambio3').click(function () {
+    $('#pt03').val('0');
 });
 
 /********* Boton para aceptar cambio de receta en tolva PT **********/
-$("#aceptar_cambio1").click(function () {
+$('#aceptar_cambio1').click(function () {
     $('#progress').css('width', '0%');
-    var seleccion_pt = $("#pt01").val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_pt = $('#pt01').val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -399,7 +394,7 @@ $("#aceptar_cambio1").click(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -431,16 +426,16 @@ $("#aceptar_cambio1").click(function () {
     });
 });
 
-$("#aceptar_cambio2").click(function () {
+$('#aceptar_cambio2').click(function () {
     $('#progress').css('width', '0%');
-    var seleccion_pt = $("#pt02").val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_pt = $('#pt02').val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -448,7 +443,7 @@ $("#aceptar_cambio2").click(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -480,16 +475,16 @@ $("#aceptar_cambio2").click(function () {
     });
 });
 
-$("#aceptar_cambio3").click(function () {
+$('#aceptar_cambio3').click(function () {
     $('#progress').css('width', '0%');
-    var seleccion_pt = $("#pt03").val();
-    var seleccion_receta = $("#seleccion").val();
+    var seleccion_pt = $('#pt03').val();
+    var seleccion_receta = $('#seleccion').val();
     $.ajax({
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -497,7 +492,7 @@ $("#aceptar_cambio3").click(function () {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -573,7 +568,7 @@ function agregarGrasa() {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -581,7 +576,7 @@ function agregarGrasa() {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -625,7 +620,7 @@ function noAgregarGrasa() {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -633,7 +628,7 @@ function noAgregarGrasa() {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -677,7 +672,7 @@ function cambiarGrasa() {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -685,7 +680,7 @@ function cambiarGrasa() {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -735,7 +730,7 @@ function transferirReceta() {
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -743,7 +738,7 @@ function transferirReceta() {
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -793,7 +788,7 @@ function resumen_modal() {
     var pt01 = $('#pt01').val() ? $('#pt01').val() : '';
     var pt02 = $('#pt02').val() ? $('#pt02').val() : '';
     var pt03 = $('#pt03').val() ? $('#pt03').val() : '';
-    $('#tbl_tolvaspt').html(pt01 + " " + pt02 + " " + pt03);
+    $('#tbl_tolvaspt').html(pt01 + ' ' + pt02 + ' ' + pt03);
     $('#resumen_modal').modal('show');
 };
 
@@ -810,7 +805,7 @@ function validarTotal() {
                 var xhr = new window.XMLHttpRequest();
     
                 // Upload progress 
-                xhr.upload.addEventListener("progress", function (evt) {
+                xhr.upload.addEventListener('progress', function (evt) {
                     if (evt.lengthComputable) {
                         var percentComplete = evt.loaded / evt.total * 100;
                         $('#progress').css('width', percentComplete + '%');
@@ -818,7 +813,7 @@ function validarTotal() {
                 }, false);
     
                 // Download progress 
-                xhr.addEventListener("progress", function (evt) {
+                xhr.addEventListener('progress', function (evt) {
                     if (evt.lengthComputable) {
                         var percentComplete = evt.loaded / evt.total * 100;
                         $('#progress').css('width', percentComplete + '%');
@@ -860,7 +855,7 @@ function cambiarIngManual(){
             var xhr = new window.XMLHttpRequest();
 
             // Upload progress 
-            xhr.upload.addEventListener("progress", function (evt) {
+            xhr.upload.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
@@ -868,7 +863,7 @@ function cambiarIngManual(){
             }, false);
 
             // Download progress 
-            xhr.addEventListener("progress", function (evt) {
+            xhr.addEventListener('progress', function (evt) {
                 if (evt.lengthComputable) {
                     var percentComplete = evt.loaded / evt.total * 100;
                     $('#progress').css('width', percentComplete + '%');
